@@ -9,7 +9,7 @@ ifneq ($(__target_inc),1)
 __target_inc=1
 
 # default device type
-DEVICE_TYPE?=router
+#DEVICE_TYPE?=router
 
 # Default packages - the really basic set
 DEFAULT_PACKAGES:=base-files libc libgcc busybox dropbear mtd uci opkg netifd fstools logd
@@ -17,6 +17,7 @@ DEFAULT_PACKAGES:=base-files libc libgcc busybox dropbear mtd uci opkg netifd fs
 DEFAULT_PACKAGES.nas:=block-mount fdisk lsblk mdadm
 # For router targets
 DEFAULT_PACKAGES.router:=dnsmasq iptables ip6tables ppp ppp-mod-pppoe kmod-nf-nathelper firewall odhcpd odhcp6c
+DEFAULT_PACKAGES.ipc:=
 DEFAULT_PACKAGES.bootloader:=
 
 ifneq ($(DUMP),)
@@ -70,6 +71,7 @@ define Profile
   DUMPINFO += \
 	echo "Target-Profile: $(1)"; \
 	echo "Target-Profile-Name: $(NAME)"; \
+	echo "Target-Profile-Devicetype: $(DEVICE_TYPE)"; \
 	echo "Target-Profile-Packages: $(PACKAGES) $(call extra_packages,$(DEFAULT_PACKAGES) $(PACKAGES))"; \
 	if [ -f ./config/profile-$(1) ]; then \
 		echo "Target-Profile-Kconfig: yes"; \

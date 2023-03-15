@@ -1,10 +1,35 @@
 /dts-v1/;
 
-/include/ "rt5350.dtsi"
+/include/ "rt5350x.dtsi"
 
 / {
         compatible = "RT5350F-T7838WIP", "ralink,rt5350-soc";
         model = "RT5350F-T7838WIP";
+
+        sound {
+                compatible = "simple-audio-card";
+                simple-audio-card,name = "Audio-I2S";
+                simple-audio-card,format = "i2s";
+                simple-audio-card,bitclock-master = <&dailink0_master>;
+                simple-audio-card,frame-master = <&dailink0_master>;
+                simple-audio-card,widgets =
+                        "Microphone", "Microphone Jack",
+                        "Headphone", "Headphone Jack";
+                simple-audio-card,routing =
+                        "LINPUT1", "Microphone Jack",
+                        "RINPUT1", "Microphone Jack",
+                        "Headphone Jack", "HP_L",
+                        "Headphone Jack", "HP_R";
+                simple-audio-card,mclk-fs = <256>;
+
+                simple-audio-card,cpu {
+                        sound-dai = <&i2s>;
+                };
+
+                dailink0_master: simple-audio-card,codec {
+                        sound-dai = <&codec>;
+                };
+        };
 
         palmbus@10000000 {
                 spi@b00 {
@@ -37,7 +62,7 @@
 
                                 partition@50000 {
                                         label = "firmware";
-                                        reg = <0x50000 0x3b0000>;
+                                        reg = <0x50000 0x7b0000>;
                                 };
                         };
                 };
@@ -49,9 +74,13 @@
         pinctrl {
                 state_default: pinctrl0 {
                         gpio {
-                                ralink,group = "jtag", "rgmii", "mdio", "uartf";
+                                ralink,group = "jtag", "leds";
                                 ralink,function = "gpio";
                         };
+			uartf_gpio {
+				groups = "uartf";
+				function = "pcm i2s";
+			};
                 };
         };
 
@@ -61,7 +90,6 @@
 
         esw@10110000 {
                 ralink,portmap = <0x2f>;
-                ralink,led_polarity = <0x17>;
         };
 
         wmac@10180000 {
@@ -77,3 +105,5 @@
         };
 
 };
+
+

@@ -7,6 +7,7 @@
 
 define Profile/T7838WIP-RT5350F
 	NAME:=t7838wip-RT5350F
+	DEVICE_TYPE:=ipc
 	PACKAGES:=\
 		kmod-usb-core kmod-usb-ohci kmod-usb2 \
 		kmod-i2c-core kmod-i2c-ralink \
